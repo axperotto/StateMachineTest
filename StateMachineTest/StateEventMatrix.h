@@ -14,10 +14,10 @@ typedef struct
 {
 	const int stateMaxNum;
 	const int eventMaxNum;
-	const void* stateMachineMemoryBuffer;
+        void* stateMachineMemoryBuffer;
 	const StateName_t startingState;
 	State_t* const states;
-	const StateName_t** stateTransitions;
+        const StateName_t* stateTransitions;
 
 	Events_t actualEvent;
 	StateName_t actualState;
@@ -26,7 +26,7 @@ typedef struct
 
 void StateEventMatrix_ExecuteTrans(StateEventMatrix_t* StateMatrix);
 void StateEventMatrix_Init(StateEventMatrix_t* StateMatrix);
-void StateEventMatrix_SetEvent(StateEventMatrix_t* StateMatrix, Events_t event, void* memBuffer, uint32_t bufferSize);
+void StateEventMatrix_SetEvent(StateEventMatrix_t* StateMatrix, Events_t event, const void* memBuffer, uint32_t bufferSize);
 
 
 #endif // !1

@@ -11,41 +11,47 @@ extern State_t NwkSendingEDAck;
 State_t  NwkStatesED[] =
 {
 	/*NWKIDLE,							  */
-	{
-		NwkIdleEntry,
-		NwkIdleRunning,
-		NwkIdleExit
-	},
+        {
+                NwkIdleEntry,
+                NwkIdleRunning,
+                NwkIdleExit,
+                {0}
+        },
 	/*NWKSENDINGMSG,					  */
-	{
-		NwkSendingMsgEntry,
-		NwkSendingMsgRunning,
-		NwkSendingMsgExit
-	},
+        {
+                NwkSendingMsgEntry,
+                NwkSendingMsgRunning,
+                NwkSendingMsgExit,
+                {0}
+        },
 	/*NWKWAITINGFORSYNCCMDFROMGATEWAY,	  */
-	{
-		NwkWaitingForSyncCmdFromGatewayEntry,
-		NwkWaitingForSyncCmdFromGatewayRunning,
-		NwkWaitingForSyncCmdFromGatewayExit
-	},
+        {
+                NwkWaitingForSyncCmdFromGatewayEntry,
+                NwkWaitingForSyncCmdFromGatewayRunning,
+                NwkWaitingForSyncCmdFromGatewayExit,
+                {0}
+        },
 	/*NWKCHECKMSG,						  */
-	{
-		NwkCheckMsgEntry,
-		NwkCheckMsgRunning,
-		NwkCheckMsgExit
-	},
+        {
+                NwkCheckMsgEntry,
+                NwkCheckMsgRunning,
+                NwkCheckMsgExit,
+                {0}
+        },
 	/*NWKROUTEMSG,						  */
-	{
-		 NwkRouteMsgEntry,
-		 NwkRouteMsgRunning,
-		 NwkRouteMsgExit
-	},
+        {
+                 NwkRouteMsgEntry,
+                 NwkRouteMsgRunning,
+                 NwkRouteMsgExit,
+                 {0}
+        },
 	/*NWKSENDINGEDACK,				      */
-	{
-		NwkSendingEDAckEntry,
-		NwkSendingEDAckRunning,
-		NwkSendingEDAckExit
-	}
+        {
+                NwkSendingEDAckEntry,
+                NwkSendingEDAckRunning,
+                NwkSendingEDAckExit,
+                {0}
+        }
 };
 
 StateName_t NwkStateTransitionsED[NWKSTATESED_MAXNUM][NWK_EVENT_ED_MAXNUM] =
@@ -64,10 +70,10 @@ StateEventMatrix_t NwkStateMachine1 =
 {
 	/*const int stateMaxNum;				   */  NWKSTATESED_MAXNUM,
 	/*const int eventMaxNum;				   */  NWK_EVENT_ED_MAXNUM,
-	/*const void* stateMachineMemory;		   */  StateMemoryNwk1,
+	/*void* stateMachineMemory;                        */  StateMemoryNwk1,
 	/*const StateName_t startingState;		   */  NWKIDLE,
 	/*const State_t* states;				   */  NwkStatesED,
-	/*const StateName_t** stateTransitions;	   */  NwkStateTransitionsED,
+        /*const StateName_t* stateTransitions;     */  &NwkStateTransitionsED[0][0],
 	/*Events_t actualEvent;					   */  EVENT_INVALID,
 	/*StateName_t actualState;				   */  STATE_INVALID
 };
@@ -77,10 +83,10 @@ StateEventMatrix_t NwkStateMachine2 =
 {
 	/*const int stateMaxNum;				   */  NWKSTATESED_MAXNUM,
 	/*const int eventMaxNum;				   */  NWK_EVENT_ED_MAXNUM,
-	/*const void* stateMachineMemory;		   */  StateMemoryNwk2,
+	/*void* stateMachineMemory;                        */  StateMemoryNwk2,
 	/*const StateName_t startingState;		   */  NWKIDLE,
 	/*const State_t* states;				   */  NwkStatesED,
-	/*const StateName_t** stateTransitions;	   */  NwkStateTransitionsED,
+        /*const StateName_t* stateTransitions;     */  &NwkStateTransitionsED[0][0],
 	/*Events_t actualEvent;					   */  EVENT_INVALID,
 	/*StateName_t actualState;				   */  STATE_INVALID
 };
@@ -90,10 +96,11 @@ StateEventMatrix_t NwkStateMachine3 =
 {
 	/*const int stateMaxNum;				   */  NWKSTATESED_MAXNUM,
 	/*const int eventMaxNum;				   */  NWK_EVENT_ED_MAXNUM,
-	/*const void* stateMachineMemory;		   */  StateMemoryNwk3,
+	/*void* stateMachineMemory;                        */  StateMemoryNwk3,
 	/*const StateName_t startingState;		   */  NWKIDLE,
 	/*const State_t* states;				   */  NwkStatesED,
-	/*const StateName_t** stateTransitions;	   */  NwkStateTransitionsED,
+        /*const StateName_t* stateTransitions;     */  &NwkStateTransitionsED[0][0],
 	/*Events_t actualEvent;					   */  EVENT_INVALID,
 	/*StateName_t actualState;				   */  STATE_INVALID
 };
+

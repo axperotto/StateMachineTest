@@ -7,12 +7,12 @@
 
 typedef struct _State_t
 {
-	const void* (*entryFnc_ptr)(struct _State_t*, void*);
-	const void* (*runningFnc_ptr)(struct _State_t*, void*);
-	const void* (*exitFnc_ptr)(struct _State_t*, void*);
+void* (*entryFnc_ptr)(struct _State_t*, void*);
+void* (*runningFnc_ptr)(struct _State_t*, void*);
+void* (*exitFnc_ptr)(struct _State_t*, void*);
 
-	uint8_t stateMemory[STATE_MEMORY];
-}State_t;
+uint8_t stateMemory[STATE_MEMORY];
+} State_t;
 
 
 #endif
