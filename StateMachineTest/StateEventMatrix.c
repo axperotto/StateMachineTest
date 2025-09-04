@@ -20,20 +20,29 @@ void StateEventMatrix_ExecuteTrans(StateEventMatrix_t* stateMatrix)
         if (newState != STATE_INVALID)
         {
             /* Exit from actual state */
-            actualStateDesc->exitFnc_ptr(actualStateDesc,
-                                         stateMatrix->stateMachineMemoryBuffer);
+            if (actualStateDesc->exitFnc_ptr != NULL)
+            {
+                actualStateDesc->exitFnc_ptr(actualStateDesc,
+                                             stateMatrix->stateMachineMemoryBuffer);
+            }
 
             /* Enter new state */
             stateMatrix->actualState = newState;
             actualStateDesc = &stateMatrix->states[stateMatrix->actualState];
-            actualStateDesc->entryFnc_ptr(actualStateDesc,
-                                          stateMatrix->stateMachineMemoryBuffer);
+            if (actualStateDesc->entryFnc_ptr != NULL)
+            {
+                actualStateDesc->entryFnc_ptr(actualStateDesc,
+                                              stateMatrix->stateMachineMemoryBuffer);
+            }
         }
 
         /* Run the state */
         actualStateDesc = &stateMatrix->states[stateMatrix->actualState];
-        actualStateDesc->runningFnc_ptr(actualStateDesc,
-                                        stateMatrix->stateMachineMemoryBuffer);
+        if (actualStateDesc->runningFnc_ptr != NULL)
+        {
+            actualStateDesc->runningFnc_ptr(actualStateDesc,
+                                            stateMatrix->stateMachineMemoryBuffer);
+        }
 
         stateMatrix->actualEvent = EVENT_INVALID;
     }

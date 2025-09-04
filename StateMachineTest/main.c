@@ -8,8 +8,14 @@ int main(void)
 
     StateEventMatrix_Init(&SimpleStateMachine);
     State_t* initState = &SimpleStateMachine.states[SimpleStateMachine.actualState];
-    initState->entryFnc_ptr(initState, SimpleStateMachine.stateMachineMemoryBuffer);
-    initState->runningFnc_ptr(initState, SimpleStateMachine.stateMachineMemoryBuffer);
+    if ((initState->entryFnc_ptr != NULL) &&
+        (initState->runningFnc_ptr != NULL))
+    {
+        initState->entryFnc_ptr(initState,
+                                SimpleStateMachine.stateMachineMemoryBuffer);
+        initState->runningFnc_ptr(initState,
+                                  SimpleStateMachine.stateMachineMemoryBuffer);
+    }
 
     for (i = 0U; i < sizeof(events)/sizeof(events[0]); i++)
     {

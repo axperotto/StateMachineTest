@@ -8,14 +8,15 @@ State_t SimpleStatesDesc[SIMPLE_STATE_MAX] =
     { DoneEntry, DoneRunning, DoneExit, {0} }
 };
 
-const StateName_t SimpleTransitions[SIMPLE_STATE_MAX][SIMPLE_EVENT_MAX] =
+/* Flattened transition table: row-major [state * EVENT_MAX + event] */
+static const StateName_t SimpleTransitions[SIMPLE_STATE_MAX * SIMPLE_EVENT_MAX] =
 {
     /* IDLE */
-    { SIMPLE_STATE_WORK, STATE_INVALID, STATE_INVALID },
+    SIMPLE_STATE_WORK, STATE_INVALID, STATE_INVALID,
     /* WORK */
-    { STATE_INVALID, SIMPLE_STATE_DONE, SIMPLE_STATE_IDLE },
+    STATE_INVALID, SIMPLE_STATE_DONE, SIMPLE_STATE_IDLE,
     /* DONE */
-    { STATE_INVALID, STATE_INVALID, SIMPLE_STATE_IDLE }
+    STATE_INVALID, STATE_INVALID, SIMPLE_STATE_IDLE
 };
 
 static uint8_t SimpleMemory[STATE_MEMORY];
@@ -27,7 +28,7 @@ StateEventMatrix_t SimpleStateMachine =
     SimpleMemory,
     SIMPLE_STATE_IDLE,
     SimpleStatesDesc,
-    (const StateName_t*)SimpleTransitions,
+    SimpleTransitions,
     EVENT_INVALID,
     STATE_INVALID
 };
