@@ -1,6 +1,18 @@
+/**
+ * @file main.c
+ * @brief Demonstration program for the state machine library.
+ */
+
 #include "SimpleStateMachine.h"
 #include <stdio.h>
 
+/**
+ * @brief Program entry point.
+ *
+ * Runs a sequence of transitions and demonstrates the reset feature.
+ *
+ * @return Zero on successful execution.
+ */
 int main(void)
 {
     Events_t events[] = { SIMPLE_EVENT_START, SIMPLE_EVENT_FINISH, SIMPLE_EVENT_RESET };
@@ -22,8 +34,11 @@ int main(void)
         StateName_t preState = SimpleStateMachine.actualState;
         StateEventMatrix_SetEvent(&SimpleStateMachine, events[i], NULL, 0U);
         StateEventMatrix_ExecuteTrans(&SimpleStateMachine);
-        printf("PreState: %u Event: %u NewState: %u\n", preState, events[i], SimpleStateMachine.actualState);
+        (void)printf("PreState: %u Event: %u NewState: %u\n", preState, events[i], SimpleStateMachine.actualState);
     }
+
+    StateEventMatrix_Reset(&SimpleStateMachine);
+    (void)printf("Reset to state: %u\n", SimpleStateMachine.actualState);
 
     return 0;
 }
