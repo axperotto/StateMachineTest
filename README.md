@@ -1,6 +1,7 @@
 # State Machine Test
 
 The project demonstrates a minimal finite state machine engine designed with MISRA-C style in mind.
+All public APIs are documented with Doxygen comments and the code casts ignored return values to `void` to satisfy MISRA C:2023 Rule 17.7.
 A simple example shows three states—IDLE, WORK and DONE—with deterministic transitions driven by events.
 
 ## Building
@@ -32,12 +33,13 @@ Exiting DONE
 Entering IDLE
 Running IDLE
 PreState: 2 Event: 2 NewState: 0
+Reset to state: 0
 ```
 
 ## Project layout
 
 - `StateMachineTest/` – source files
-  - `State.h` and `StateEventMatrix.*` – generic engine
+  - `State.h` and `StateEventMatrix.*` – generic engine with initialization and reset utilities
   - `SimpleStates.*` – sample state implementations
   - `SimpleStateMachine.*` – transition table and instance
   - `main.c` – small driver executing a few transitions
@@ -45,3 +47,6 @@ PreState: 2 Event: 2 NewState: 0
 ## Notes
 
 The code is intended as a starting point for experimentation in safety-critical environments. Further verification is required before production use.
+
+The library provides `StateEventMatrix_Reset` to deterministically return the state machine to its initial state and clear internal memory, which can aid in building safety-critical applications.
+Return values from standard library functions such as `memcpy`, `memset` and `printf` are cast to `void` to document intentional discard in compliance with MISRA C:2023.

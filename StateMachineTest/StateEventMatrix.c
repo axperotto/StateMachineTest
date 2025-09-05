@@ -1,6 +1,19 @@
+/**
+ * @file StateEventMatrix.c
+ * @brief Implementation of the state-event transition matrix engine.
+ */
+
 #include "StateEventMatrix.h"
 #include <string.h>
 
+/**
+ * @brief Execute the transition driven by the pending event.
+ *
+ * Performs exit, entry and running callbacks as required and clears
+ * the pending event on completion.
+ *
+ * @param[in,out] stateMatrix Pointer to the state machine object.
+ */
 void StateEventMatrix_ExecuteTrans(StateEventMatrix_t* stateMatrix)
 {
     if ((stateMatrix == NULL) || (stateMatrix->states == NULL) ||
@@ -48,6 +61,11 @@ void StateEventMatrix_ExecuteTrans(StateEventMatrix_t* stateMatrix)
     }
 }
 
+/**
+ * @brief Initialise the state machine to its starting state.
+ *
+ * @param[in,out] stateMatrix Pointer to the state machine object.
+ */
 void StateEventMatrix_Init(StateEventMatrix_t* stateMatrix)
 {
     if (stateMatrix != NULL)
@@ -57,6 +75,14 @@ void StateEventMatrix_Init(StateEventMatrix_t* stateMatrix)
     }
 }
 
+/**
+ * @brief Set the next event and optionally copy external data.
+ *
+ * @param[in,out] stateMatrix Pointer to the state machine object.
+ * @param[in] event Event to trigger.
+ * @param[in] memBuffer Optional pointer to data to copy.
+ * @param[in] bufferSize Size of the data in bytes.
+ */
 void StateEventMatrix_SetEvent(StateEventMatrix_t* stateMatrix, Events_t event,
                                void* memBuffer, uint32_t bufferSize)
 {
@@ -68,7 +94,27 @@ void StateEventMatrix_SetEvent(StateEventMatrix_t* stateMatrix, Events_t event,
     if ((memBuffer != NULL) && (stateMatrix->stateMachineMemoryBuffer != NULL) &&
         (bufferSize <= (uint32_t)STATE_MEMORY))
     {
-        memcpy(stateMatrix->stateMachineMemoryBuffer, memBuffer, bufferSize);
+        /* MISRA C:2023 Rule 17.7 fix: cast return value to void (TC) */
+        (void)memcpy(stateMatrix->stateMachineMemoryBuffer, memBuffer, bufferSize);
+    }
+}
+
+/**
+ * @brief Reset the state machine to the starting state and clear memory.
+ *
+ * @param[in,out] stateMatrix Pointer to the state machine object.
+ */
+void StateEventMatrix_Reset(StateEventMatrix_t* stateMatrix)
+{
+    if (stateMatrix != NULL)
+    {
+        stateMatrix->actualEvent = EVENT_INVALID;
+        stateMatrix->actualState = stateMatrix->startingState;
+        if (stateMatrix->stateMachineMemoryBuffer != NULL)
+        {
+            /* MISRA C:2023 Rule 17.7 fix: cast return value to void (TC) */
+            (void)memset(stateMatrix->stateMachineMemoryBuffer, 0, STATE_MEMORY);
+        }
     }
 }
 
