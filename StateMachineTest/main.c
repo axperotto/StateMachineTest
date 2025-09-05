@@ -1,44 +1,29 @@
-#include "NwkStates.h"
-#include "StateEventMatrix.h"
-#include<stdio.h>
+#include "SimpleStateMachine.h"
+#include <stdio.h>
 
-typedef struct {
-	uint32_t size;
-	uint8_t buffer[1000];
-}MsgType_t;
-
-extern StateEventMatrix_t NwkStateMachine1, NwkStateMachine2, NwkStateMachine3;
-
-StateEventMatrix_t* NwkStateMachines[] = { &NwkStateMachine1 , &NwkStateMachine2 , &NwkStateMachine3 };
-int main()
+int main(void)
 {
-	int s = sizeof(State_t);
-	MsgType_t buffer;
-	StateEventMatrix_Init(&NwkStateMachine1);
-	StateEventMatrix_Init(&NwkStateMachine2);
-	StateEventMatrix_Init(&NwkStateMachine3);
+    Events_t events[] = { SIMPLE_EVENT_START, SIMPLE_EVENT_FINISH, SIMPLE_EVENT_RESET };
+    size_t i;
 
-	for (int I = 0; I < sizeof(buffer.buffer); I++)
-	{
-		buffer.buffer[I] = I;
-	}
+    StateEventMatrix_Init(&SimpleStateMachine);
+    State_t* initState = &SimpleStateMachine.states[SimpleStateMachine.actualState];
+    if ((initState->entryFnc_ptr != NULL) &&
+        (initState->runningFnc_ptr != NULL))
+    {
+        initState->entryFnc_ptr(initState,
+                                SimpleStateMachine.stateMachineMemoryBuffer);
+        initState->runningFnc_ptr(initState,
+                                  SimpleStateMachine.stateMachineMemoryBuffer);
+    }
 
-	NwkStateMachines[0]->states[1].stateMemory[0] = 0;
+    for (i = 0U; i < sizeof(events)/sizeof(events[0]); i++)
+    {
+        StateName_t preState = SimpleStateMachine.actualState;
+        StateEventMatrix_SetEvent(&SimpleStateMachine, events[i], NULL, 0U);
+        StateEventMatrix_ExecuteTrans(&SimpleStateMachine);
+        printf("PreState: %u Event: %u NewState: %u\n", preState, events[i], SimpleStateMachine.actualState);
+    }
 
-	StateEventMatrix_SetEvent(NwkStateMachines[0], 0, (void*)&buffer, sizeof(buffer));
-	StateEventMatrix_ExecuteTrans(NwkStateMachines[0]);
-
-	buffer.size = rand() % sizeof(buffer.buffer);
-	for (int i = 0; i < 100; i++)
-	{
-		int actualBuffer = 0;
-
-		StateName_t preState = NwkStateMachines[actualBuffer]->actualState;
-
-		NWK_EventsED_t evt = rand() % NWK_EVENT_ED_MAXNUM;
-		StateEventMatrix_SetEvent(NwkStateMachines[actualBuffer], evt, (void*)&buffer, sizeof(buffer));
-		StateEventMatrix_ExecuteTrans(NwkStateMachines[actualBuffer]);
-		printf("Buffer: %d - PreState: %d - Event: %d - New State: %d\r\n",
-			actualBuffer, preState, evt, NwkStateMachines[actualBuffer]->actualState);
-	}
+    return 0;
 }
